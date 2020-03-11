@@ -251,7 +251,9 @@ each(array, myFunction);
 module.exports.filter = filter;
 
 /**
- * reject:
+ * reject: takes in an array and a function and iterates through that array
+ * with a logical function test. If the test returns false for an element, that 
+ * element is pused into an array. Thus, it returns an array of "false" elements.
  * 
  * @param {Array} array: An array.
  * 
@@ -278,7 +280,10 @@ module.exports.filter = filter;
 module.exports.reject = reject;
 
 /**
- * partition:
+ * partition: takes in an array and a function and returns a single array, which
+ * is made up of two sub-arrays. The first sub-array is made up of all elements
+ * that are truthy after being passed through the input function. The second 
+ * sub-array is made up of all elements that resolve to a falsy value.
  * 
  * @param {Array} array: An array.
  * 
@@ -307,7 +312,8 @@ module.exports.reject = reject;
  module.exports.partition = partition;
  
  /**
-  * map:
+  * map: takes in a collection and a function and returns an array of all of
+  * return values of each element once passed through the input function.
   * 
   * @param {Array or Object} collection: An array or object.
   * 
@@ -330,7 +336,11 @@ module.exports.reject = reject;
   module.exports.map = map;
   
 /**
- * pluck:
+ * pluck: takes in an array of objects and a string. It loops through each
+ * object to see if that string is a key in any of the objects. If the key
+ * does exist, the value is pushed into an array. Once complete, the function
+ * will return an array of all the values that are at that key within
+ * the respective objects.
  * 
  * @param {Array or Object} collection: An array or object.
  * 
@@ -353,7 +363,9 @@ module.exports.reject = reject;
   module.exports.pluck = pluck;
 
 /**
- * every:
+ * every: takes in a collection and a function and calls upon each element in
+ * the collection and if all of the returned values are true, will return true.
+ * If any of the returned values resolve to false, it will return false.
  * 
  * @param {Array or Object} collection: An array or object.
  * 
@@ -364,25 +376,20 @@ module.exports.reject = reject;
  */
  
  function every(collection, test) {
-    //check if <test> is a function
+
     if (typeOf(test) === "function") {
-        // if it's a function
-        // run map on it, calling test on the element, index, collection
+
         let arrWFunc = map(collection, function(e, i , c){
         return test(e, i, c)
         })
-        // set up if statement to check if array contains false
-        // if it contains false, return false
-        // else return true
+
         if (contains(arrWFunc, false)) {
             return false;
         } else {
             return true;
         }
     } else {
-        // if it's not a function
-        // using map:
-        // return true if element is truthy, otherwise return false
+
         let arrWOFunc = map(collection, function(e, i, c){
             if(e){
                 return true;
@@ -390,9 +397,7 @@ module.exports.reject = reject;
                 return false;
             }
         })
-        // set up if statement to check if array contains false
-        // if it contains false, return false
-        // else return true
+
          if (contains(arrWOFunc, false)) {
             return false;
         } else {
@@ -404,7 +409,9 @@ module.exports.reject = reject;
 module.exports.every = every;
 
 /**
- * some:
+ * some: takes in a collection and a function and calls that function for each
+ * element. Returns a boolean of true if any or all of the elements resolve to 
+ * true after the function call.
  * 
  * @param {Array or Object} collection: An array or object.
  * 
@@ -417,25 +424,20 @@ module.exports.every = every;
  
  function some(collection, test) {
  
-     //check if <test> is a function
+  
     if (typeOf(test) === "function") {
-        // if it's a function
-        // run map on it, calling test on the element, index, collection
+
         let arrWFunc = map(collection, function(e, i , c){
         return test(e, i, c)
         })
-        // set up if statement to check if array contains false
-        // if it contains false, return false
-        // else return true
+    
         if (contains(arrWFunc, true)) {
             return true;
         } else {
             return false;
         }
     } else {
-        // if it's not a function
-        // using map:
-        // return true if element is truthy, otherwise return false
+ 
         let arrWOFunc = map(collection, function(e, i, c){
             if(e){
                 return true;
@@ -443,9 +445,7 @@ module.exports.every = every;
                 return false;
             }
         })
-        // set up if statement to check if array contains false
-        // if it contains false, return false
-        // else return true
+
          if (contains(arrWOFunc, true)) {
             return true;
         } else {
@@ -458,7 +458,14 @@ module.exports.every = every;
 module.exports.some = some;
 
 /**
- * reduce:
+ * reduce: takes in a collection, a function and a seed and returns a single
+ * value after looping all elements within that collection. The callback function
+ * takes in the arguments of previousResults, element, and index. Each time the
+ * callback function is returned, that return value becomes the previousResult
+ * for the next iteration. If no seed is given in the initial funciton call, the
+ * first element of the collection will take on the value of the previousResult.
+ * After the last function iteration, the final value of previousResult will
+ * be returned.
  * 
  * @param {Array or Object} collection: An array or collection.
  * 
@@ -476,22 +483,14 @@ module.exports.some = some;
     let previousResult;
     if(seed !== undefined) {
         previousResult = seed;
-        // use each to gain access to each value in the array
         each(collection, function(e, i, a){
-            // calling function for every element, passing in previous, element
             previousResult = test(previousResult, e, i, a);
-            
         })
-        // if there is no seed
     } else {
-        // use the first element of the array as the seed
         previousResult = collection[0];
-        // implement a for loop to start iterating at my first index
         for(let i = 1; i < collection.length; i++) {
             previousResult = test(previousResult, collection[i], i, collection);
         }
-        
-        
     }
     
     return previousResult;
@@ -502,7 +501,10 @@ module.exports.some = some;
 module.exports.reduce = reduce;
 
 /**
- * extend:
+ * extend: takes in one object and multiple other objects and updates the first
+ * object's value with another object's value if they have the same key. If a
+ * key does not exist in the first object, the key/value pair will be added to 
+ * the first object. The completely updated object will be returned.
  * 
  * @param {Object} object1: An object.
  * 
