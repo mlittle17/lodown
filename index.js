@@ -2,27 +2,6 @@
 
 // YOU KNOW WHAT TO DO //
 
-/**
- * each: Designed to loop over a collection, Array or Object, and applies the 
- * action Function to each value in the collection.
- * 
- * @param {Array or Object} collection: The collection over which to iterate.
- * 
- * @param {Function} action: The Function to be applied to each value in the 
- * collection
- */
-function each(collection, action) {
-    if(Array.isArray(collection)) {
-        for(var i = 0; i < collection.length; i++) {
-            action(collection[i], i, collection);
-        }
-    } else {
-        for (var key in collection) {
-            action(collection[key], key, collection);
-        }
-    }
-}
-module.exports.each = each;
 
 /**
  * identity: takes in a given value and returns that value, unaltered.
@@ -70,7 +49,7 @@ module.exports.identity = identity;
   * 
   * @param {Number} number: Any number.
   * 
-  * @return {Array}: The array
+  * @return {Array}: The array.
   * 
   */
   
@@ -134,9 +113,10 @@ module.exports.last = last;
  * 
  * @param {Value} value: A value:
  * 
- * @return {Index} i
+ * @return {Number} index: The index of the value within the input array.
  * 
- * @return {-1} 
+ * @return {Number} -1 : The number that will be returned if the input value
+ *                          is not within the array.
  * 
  */
  
@@ -173,27 +153,25 @@ function contains(array,value) {
 module.exports.contains = contains;
 
 /**
- * each: takes in either an array or object and any function and calls that
- * function for each element in the <array> or each property in the 
- * <object>.
+ * each: Designed to loop over a collection, Array or Object, and applies the 
+ * action Function to each value in the collection.
  * 
- * @param {Array or Object} collection: An array or object.
+ * @param {Array or Object} collection: The collection over which to iterate.
  * 
- * @param {Function} test: Any function.
- * 
- * 
+ * @param {Function} action: The Function to be applied to each value in the 
+ * collection
  */
- 
- function each(collection, test) {
-    if(typeOf(collection) === "array") {
-        for(let i = 0; i < collection.length; i++) {
-            test(collection[i], i, collection);
+function each(collection, action) {
+    if(Array.isArray(collection)) {
+        for(var i = 0; i < collection.length; i++) {
+            action(collection[i], i, collection);
         }
-    } else for(var key in collection) {
-        test(collection[key], key, collection);
+    } else {
+        for (var key in collection) {
+            action(collection[key], key, collection);
+        }
     }
 }
-
 module.exports.each = each;
 
 /**
@@ -203,7 +181,8 @@ module.exports.each = each;
  * 
  * @param {Array} array: An array.
  * 
- * @return {Result Array}
+ * @return {Array} newArr: A new array of all elements that are unique to the
+ * original input array.
  */
  
 function unique (array) {
@@ -221,15 +200,16 @@ module.exports.unique = unique;
 
 /**
  * filter: takes in an array and a function and calls that <function> for each
- * element in that array, using the function named each. If an element 
- * resolves to true, that will be added to a new array. Once all elements 
- * are tested, the new array will be returned.
+ * element, index, and the entire collection, using the function named each. 
+ * If an element resolves to true, that will be added to a new array. Once all
+ * elements are tested, the new array will be returned.
  * 
  * @param {Array} array: An array.
  * 
  * @param {Function} test: A function.
  * 
- * @return {Result Array} 
+ * @return {Array} newArr: An array of all elements that resolve to true after
+ * being invoked by the input test function.
  * 
  */
  
@@ -251,15 +231,17 @@ each(array, myFunction);
 module.exports.filter = filter;
 
 /**
- * reject: takes in an array and a function and iterates through that array
- * with a logical function test. If the test returns false for an element, that 
- * element is pused into an array. Thus, it returns an array of "false" elements.
+ * reject: takes in an array and a function and calls that <function> for each
+ * element, index, and the entire collection, using the function named each. 
+ * If an element resolves to false, that will be added to a new array. Once all
+ * elements are tested, the new array will be returned.
  * 
  * @param {Array} array: An array.
  * 
  * @param {Function} test: A function.
  * 
- * @return {Result Array} newArr
+ * @return {Array} newArr: An array of all elements that resolve to false after
+ * being invoked by the input test function.
  * 
  */
  
@@ -289,7 +271,8 @@ module.exports.reject = reject;
  * 
  * @param {Function} test: A function.
  * 
- * @return {Reult Array} result: The result array.
+ * @return {Array} result: An array of two sub-arrays, one for truthy values and
+ * one for falsy values.
  * 
  */
  
@@ -319,7 +302,8 @@ module.exports.reject = reject;
   * 
   * @param {Function} test: A function.
   * 
-  * @return {Result Array} resultArr
+  * @return {Array} resultArr: An array of all the returned elements after
+  * being passed through the test function.
   * 
   */
   
@@ -342,11 +326,14 @@ module.exports.reject = reject;
  * will return an array of all the values that are at that key within
  * the respective objects.
  * 
- * @param {Array or Object} collection: An array or object.
+ * @param {Array} collection: An array of objects.
  * 
- * @param {Property} property: A property.
+ * @param {String} property: A string that will be used to see if the input
+ * object has the string as a property within the object.
  * 
- * @return {Value} collection[property]
+ * @return {Array} collection[property] : An array of all values within the array
+ * of objects, if an object has the input property as a property within 
+ * the respective object.
  * 
  */
  
@@ -365,13 +352,16 @@ module.exports.reject = reject;
 /**
  * every: takes in a collection and a function and calls upon each element in
  * the collection and if all of the returned values are true, will return true.
- * If any of the returned values resolve to false, it will return false.
+ * If any of the returned values resolve to false, it will return false. If a
+ * test function is not provided, the collection will be looped over and will
+ * return true if all values are truthy. If any values are false, it will return
+ * false.
  * 
  * @param {Array or Object} collection: An array or object.
  * 
  * @param {Function} test: A function.
  * 
- * @return {test or true or false}
+ * @return {Boolean} true or false
  * 
  */
  
@@ -411,13 +401,15 @@ module.exports.every = every;
 /**
  * some: takes in a collection and a function and calls that function for each
  * element. Returns a boolean of true if any or all of the elements resolve to 
- * true after the function call.
+ * true after the function call. If no test function is provided, the collection
+ * will be looped over and return true if any or all values are truthy. If all
+ * values are false, it will return false.
  * 
  * @param {Array or Object} collection: An array or object.
  * 
  * @param {Function} test: A function.
  * 
- * @return {test or true or false}
+ * @return {Boolean} true or false
  * 
  * 
  */
@@ -473,7 +465,7 @@ module.exports.some = some;
  * 
  * @param {A value} seed: A seed.
  * 
- * @return {Result} previousResult
+ * @return {A value} previousResult
  * 
  * 
  */
@@ -510,7 +502,7 @@ module.exports.reduce = reduce;
  * 
  * @param {Object} ...objects: An array of objects.
  * 
- *
+ * @return {Object} object1: The updated object.
  */
  
  function extend(object1, ...objects) {
